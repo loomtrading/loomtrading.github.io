@@ -36,7 +36,7 @@
       background-size: 100% 100%, 30px 30px, 30px 30px;
     }
 
-    /* --- SITE NAVIGATION HEADER --- */
+    /* --- NAVIGATION BRANDING HEADER --- */
     .site-nav-header {
       max-width: 1280px;
       margin: 20px auto 10px auto;
@@ -45,7 +45,7 @@
       border: 1px solid var(--panel-border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-style: space-between;
       backdrop-filter: blur(5px);
     }
 
@@ -96,8 +96,9 @@
       text-transform: uppercase;
       text-decoration: none;
       border-radius: 3px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 0 8px rgba(0, 240, 255, 0.1);
+      position: relative;
     }
 
     .nav-btn::before {
@@ -105,6 +106,7 @@
       color: var(--accent-pink);
       font-weight: bold;
       opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     .nav-btn:hover, .nav-btn.active {
@@ -112,9 +114,15 @@
       border-color: var(--accent-cyan);
       color: #ffffff;
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      transform: translateY(-1px);
     }
 
-    /* --- LAYOUT & TYPEWRITER CONTAINERS --- */
+    .nav-btn:hover::before, .nav-btn.active::before {
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    /* --- LAYOUT GRID & CARDS --- */
     .risk-container {
       max-width: 1280px;
       margin: 10px auto 40px auto;
@@ -161,6 +169,7 @@
       background: #000;
       box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
       overflow: hidden;
+      border-radius: 4px;
     }
 
     .image-frame img {
@@ -182,7 +191,7 @@
 </head>
 <body>
 
-  <!-- SITE NAVIGATION HEADER -->
+  <!-- NAVIGATION BRANDING HEADER -->
   <header class="site-nav-header">
     <div class="logo-container">
       <div class="logo-img-wrapper">
@@ -223,7 +232,7 @@
     <!-- FULLSIZE RECTANGULAR PHOTO FRAME (TOP PORTION VISIBLE ABOVE THE FOLD) -->
     <section class="image-frame my-6">
       <!-- REPLACE 'risk-matrix.jpeg' WITH YOUR ACTUAL IMAGE FILENAME -->
-      <img src="risk-matrix.jpeg" alt="Loom Engine Risk Architecture" onerror="this.onerror=null; this.src='https://via.placeholder.com/1280x500/080e1b/00f0ff?text=LOOM+ENGINE+//+RISK+MATRIX+VISUAL';" />
+      <img src="risk.jpeg" alt="Loom Engine Risk Architecture" onerror="this.onerror=null; this.src='https://via.placeholder.com/1280x500/080e1b/00f0ff?text=LOOM+ENGINE+//+RISK+MATRIX+VISUAL';" />
       <div class="scanline-overlay"></div>
     </section>
 
@@ -235,19 +244,18 @@
 
   </main>
 
-  <!-- TYPEWRITER & INTERSECTION OBSERVER SCRIPT -->
+  <!-- TYPEWRITER & SCROLL TRIGGER SCRIPT -->
   <script>
-    // COPY STRINGS
-    const topText = `// TERMINAL RISK MATRIX: BRUTE-FORCED ERGODICITY\n\nStandard financial models assume ensemble average returns, ignoring path-dependency and catastrophic tail-risk. Loom Engine forces strict ergodicity onto volatile perp-futures order books. System capital operates under mandatory position-sizing decay curves, volatility-adjusted ATR stops, and hard circuit-breaker liquidation barriers. Tail-risk absorption is non-negotiable: zero ruin probability is hard-coded into every execution cycle.`;
+    // EXACT APPROVED TEXT BLOCKS
+    const topText = `// TERMINAL RISK MATRIX: BRUTE-FORCED ERGODICITY\n\nStandard financial models assume ensemble-average returns, ignoring path-dependency and catastrophic tail-risk. Loom Engine forces strict ergodicity onto volatile perpetual futures order books. System capital operates under mandatory position-sizing decay curves, volatility-adjusted ATR stops, and automated circuit-breaker liquidation barriers.\n\nDay-to-day risk management is governed by strict dynamic drawdowns and real-time toxic flow detection. Tail-risk absorption is non-negotiable: zero ruin probability is hard-coded into every execution cycle.`;
 
     const lowerText = `INFRASTRUCTURE // PROPRIETARY EXECUTION ONLY\n\nLoom Engine was engineered exclusively to deploy and manage internal capital across decentralized perpetual venues. Model-80 harness parameters operate under institutional risk ceilings and strict dynamic drawdowns.\n\nCapital allocation models are closed to public or third-party participation. All signal generation, liquidity routing, and vault execution remain 100% internal and non-custodial.`;
 
-    // TYPEWRITER HELPER FUNCTION
+    // TYPEWRITER ENGINE WITH PERMANENT CURSOR
     function typeWriter(elementId, text, speed = 18, onComplete = null) {
       const container = document.getElementById(elementId);
       let index = 0;
       
-      // Create text container and persistent blinking cursor
       const textNode = document.createElement('span');
       const cursor = document.createElement('span');
       cursor.className = 'cursor';
@@ -266,11 +274,12 @@
       type();
     }
 
-    // RUN TOP TYPEWRITER IMMEDIATELY ON PAGE LOAD
+    // INITIALIZATION ON LOAD & INTERSECTION OBSERVER
     window.addEventListener('DOMContentLoaded', () => {
+      // Type top block immediately
       typeWriter('top-typewriter', topText, 16);
 
-      // SETUP SCROLL TRIGGER FOR LOWER TYPEWRITER
+      // Scroll trigger for lower block
       let lowerTriggered = false;
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
