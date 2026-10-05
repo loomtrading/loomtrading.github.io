@@ -137,7 +137,7 @@
     }
 
     .logo-img-wrapper {
-      width: 80px;
+      width: 48px;
       height: 48px;
       background: #000;
       border: 1px solid var(--accent-cyan);
@@ -152,7 +152,7 @@
     .logo-img-wrapper img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
 
     /* PROMINENT MENU BUTTON STYLING */
@@ -206,6 +206,25 @@
     .nav-btn:active {
       transform: translateY(1px);
       box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+    }
+
+    /* Special Highlight for Syllabus / Remember Button */
+    .nav-btn-highlight {
+      background: rgba(255, 0, 128, 0.08);
+      border-color: rgba(255, 0, 128, 0.5);
+      color: #ff80c0;
+      box-shadow: 0 0 8px rgba(255, 0, 128, 0.15);
+    }
+
+    .nav-btn-highlight::before {
+      color: var(--accent-amber);
+    }
+
+    .nav-btn-highlight:hover {
+      background: rgba(255, 0, 128, 0.22);
+      border-color: var(--accent-pink);
+      color: #ffffff;
+      box-shadow: 0 0 18px rgba(255, 0, 128, 0.5);
     }
 
     /* --- LAYOUT GRID --- */
@@ -371,8 +390,8 @@
         <a href="#system" class="nav-btn">
           <span>System</span>
         </a>
-        <a href="risk.html" class="nav-btn">
-          <span>Risk</span>
+     
+       
         </a>
       </nav>
     </div>
@@ -503,7 +522,7 @@
       </section>
 
       <!-- KNOWLEDGE VAULT / READING LIST -->
-      <section class="panel">
+      <section class="panel" id="remember">
         <div class="panel-header">
           <span class="panel-title">// KNOWLEDGE VAULT: RESEARCH & SYLLABUS</span>
           <span class="muted-text">INDEX_NEXUS</span>
@@ -823,15 +842,195 @@
 
         ctx.fillStyle = color;
         for (let py = bodyTop + PIXEL * 2; py < bodyTop + bodyHeight - PIXEL * 2; py += PIXEL * 2) {
-          ctx.fillRect(px - halfW + PIXEL, py, (halfW - PIXEL) * 2, PIXEL);
+          ctx.fillRect(px - PIXEL, py, PIXEL * 2, PIXEL);
         }
       }
     }
 
-    // Initialize Canvas Context
-    resizeCanvas();
-    buildCycleData();
-    renderPills();
+    function draw() {
+      const w = canvas.getBoundingClientRect().width;
+      const h = canvas.getBoundingClientRect().height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = 'rgba(0, 255, 204, 0.07)';
+      ctx.lineWidth = 1;
+      const gridCols = 12;
+      const gridRows = 8;
+      
+      for (let i = 0; i <= gridCols; i++) {
+        let x = (w / gridCols) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let i = 0; i <= gridRows; i++) {
+        let y = (h / gridRows) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      const visibleCount = Math.floor(progress * candles.length);
+      if (visibleCount < 2) return;
+
+      const visibleCandles = candles.slice(0, visibleCount);
+
+      let minP = Math.min(...visibleCandles.map(c => c.low));
+      let maxP = Math.max(...visibleCandles.map(c => c.high));
+      let padding = (maxP - minP) * 0.16 || 1;
+      minP -= padding;
+      maxP += padding;
+
+      const getY = (val) => h - ((val - minP) / (maxP - minP)) * (h - 90) - 45;
+      const candleWidth = (w - 120) / candles.length;
+      const getX = (idx) => 60 + idx * candleWidth + candleWidth / 2;
+
+      if (visibleCount > 4) {
+        ctx.beginPath();
+        ctx.moveTo(getX(0), getY(senkouA[0]));
+        for (let i = 1; i < visibleCount; i++) {
+          ctx.lineTo(getX(i), getY(senkouA[i]));
+        }
+        for (let i = visibleCount - 1; i >= 0; i--) {
+          ctx.lineTo(getX(i), getY(senkouB[i]));
+        }
+        ctx.closePath();
+        
+        let cloudGlow = ctx.createLinearGradient(0, 0, 0, h);
+        cloudGlow.addColorStop(0, 'rgba(0, 255, 204, 0.12)');
+        cloudGlow.addColorStop(1, 'rgba(255, 0, 128, 0.05)');
+        ctx.fillStyle = cloudGlow;
+        ctx.fill();
+      }
+
+      ctx.lineWidth = 2;
+      ctx.shadowBlur = 8;
+
+      ctx.strokeStyle = '#00ffcc';
+      ctx.shadowColor = '#00ffcc';
+      ctx.beginPath();
+      for (let i = 0; i < visibleCount; i++) {
+        let x = getX(i), y = getY(tenkanLine[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = '#ff0080';
+      ctx.shadowColor = '#ff0080';
+      ctx.beginPath();
+      for (let i = 0; i < visibleCount; i++) {
+        let x = getX(i), y = getY(kijunLine[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      for (let i = 0; i < visibleCount; i++) {
+        const c = candles[i];
+        const x = getX(i);
+        const yOpen = getY(c.open);
+        const yClose = getY(c.close);
+        const yHigh = getY(c.high);
+        const yLow = getY(c.low);
+        const isBullish = c.close >= c.open;
+
+        drawPixelCandle(x, yHigh, yLow, yOpen, yClose, candleWidth, isBullish);
+      }
+
+      ctx.strokeStyle = '#ffdd00';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i < visibleCount; i++) {
+        if (trailingStop[i] !== null) {
+          let x = getX(i), y = getY(trailingStop[i]);
+          if (!started) { ctx.moveTo(x, y); started = true; } 
+          else ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const triggerIdx = Math.floor(candles.length * 0.62);
+      if (visibleCount > triggerIdx) {
+        const tx = getX(triggerIdx);
+        const ty = getY(candles[triggerIdx].high);
+
+        ctx.fillStyle = '#ff0055';
+        ctx.beginPath();
+        ctx.moveTo(tx, ty - 12);
+        ctx.lineTo(tx - 8, ty - 26);
+        ctx.lineTo(tx + 8, ty - 26);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.font = '700 12px Orbitron';
+        ctx.fillStyle = '#ff0055';
+        ctx.fillText('SHORT EXECUTE', tx - 55, ty - 32);
+      }
+
+      const apexIdx = Math.floor(candles.length * 0.52);
+      if (visibleCount > apexIdx) {
+        const ax = getX(apexIdx);
+        const ay = getY(candles[apexIdx].high);
+
+        ctx.strokeStyle = '#ff0080';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ax, ay, 9, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.font = '700 11px VT323';
+        ctx.fillStyle = '#ff0080';
+        ctx.fillText('LIQUIDITY SWEEP APEX', ax + 14, ay - 4);
+      }
+    }
+
+    let lastTime = performance.now();
+    let frameCount = 0;
+
+    function tick(now) {
+      frameCount++;
+      if (now - lastTime >= 1000) {
+        elFps.innerText = frameCount;
+        frameCount = 0;
+        lastTime = now;
+      }
+
+      progress += CYCLE_SPEED;
+      elProgressBar.style.width = `${Math.min(progress * 100, 100)}%`;
+
+      if (progress >= 1.0) {
+        progress = 0;
+        currentAssetIndex = (currentAssetIndex + 1) % ASSETS.length;
+        const currentAsset = ASSETS[currentAssetIndex];
+
+        elAsset.innerText = currentAsset.symbol;
+        elReturn.innerText = currentAsset.expectedReturn;
+        elRisk.innerText = currentAsset.risk;
+        renderPills();
+
+        buildCycleData();
+      }
+
+      const currentPhase = getPhase(progress);
+      elPhase.innerText = currentPhase.name;
+      elPhase.className = `text-xs font-hud font-bold uppercase ${currentPhase.color}`;
+
+      draw();
+      requestAnimationFrame(tick);
+    }
+
+    window.onload = function() {
+      resizeCanvas();
+      renderPills();
+      buildCycleData();
+      requestAnimationFrame(tick);
+    };
   </script>
 </body>
 </html>
