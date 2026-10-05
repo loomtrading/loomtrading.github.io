@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LOOM ENGINE // SYSTEM_TERMINAL</title>
+  <title>LOOM TRADING // SYSTEM_TERMINAL</title>
   
   <!-- Fonts: Monospace, Cyber & Retro Synth Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -129,35 +129,102 @@
       backdrop-filter: blur(5px);
     }
 
-    .brand-logo-pixel {
-      font-family: 'VT323', monospace;
-      font-size: 26px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      color: var(--accent-cyan);
-      text-transform: uppercase;
-      line-height: 1;
+    /* JPEG LOGO PLACEHOLDER WRAPPER */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .nav-links {
+    .logo-img-wrapper {
+      width: 48px;
+      height: 48px;
+      background: #000;
+      border: 1px solid var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
       display: flex;
-      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .logo-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* PROMINENT MENU BUTTON STYLING */
+    .nav-menu-group {
+      display: flex;
+      gap: 12px;
       align-items: center;
     }
 
-    .nav-link {
-      color: var(--text-main);
-      text-decoration: none;
-      font-size: 12px;
-      font-family: var(--font-mono);
-      text-transform: uppercase;
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      color: var(--accent-cyan);
+      padding: 8px 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
       letter-spacing: 1px;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.1);
+      position: relative;
     }
 
-    .nav-link:hover {
-      color: var(--accent-cyan);
-      text-shadow: 0 0 8px var(--accent-cyan);
+    .nav-btn::before {
+      content: '>';
+      color: var(--accent-pink);
+      font-weight: bold;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: rgba(0, 240, 255, 0.18);
+      border-color: var(--accent-cyan);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn:hover::before {
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    .nav-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+    }
+
+    /* Special Highlight for Syllabus / Remember Button */
+    .nav-btn-highlight {
+      background: rgba(255, 0, 128, 0.08);
+      border-color: rgba(255, 0, 128, 0.5);
+      color: #ff80c0;
+      box-shadow: 0 0 8px rgba(255, 0, 128, 0.15);
+    }
+
+    .nav-btn-highlight::before {
+      color: var(--accent-amber);
+    }
+
+    .nav-btn-highlight:hover {
+      background: rgba(255, 0, 128, 0.22);
+      border-color: var(--accent-pink);
+      color: #ffffff;
+      box-shadow: 0 0 18px rgba(255, 0, 128, 0.5);
     }
 
     /* --- LAYOUT GRID --- */
@@ -172,7 +239,9 @@
 
     @media (max-width: 900px) {
       .container { grid-template-columns: 1fr; }
-      .site-nav-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .site-nav-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .nav-menu-group { width: 100%; flex-wrap: wrap; }
+      .nav-btn { flex: 1 1 auto; justify-content: center; }
     }
 
     /* --- PANELS & CARDS --- */
@@ -297,15 +366,30 @@
     </div>
   </div>
 
-  <!-- SITE NAVIGATION HEADER WITH LOOM ENGINE LOGO -->
+  <!-- SITE NAVIGATION HEADER WITH JPEG LOGO PLACEHOLDER & PROMINENT HUD BUTTONS -->
   <header class="site-nav-header">
-    <div class="brand-logo-pixel glow-cyan">
-      LOOM // ENGINE
+    <div class="logo-container">
+      <div class="logo-img-wrapper">
+        <!-- REPLACE 'logo.jpg' WITH YOUR ACTUAL JPEG IMAGE FILENAME OR PATH -->
+        <img id="brand-logo-img" src="logo.jpg" alt="Loom Engine Logo" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-synth text-cyan-400 text-xs text-center\'>LOGO</span>';" />
+      </div>
+      <div>
+        <div class="font-synth text-xl text-cyan-300 tracking-wider leading-none glow-cyan">LOOM // ENGINE</div>
+        <div class="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-0.5">SYSTEM_TERMINAL</div>
+      </div>
     </div>
-    <nav class="nav-links">
-      <a href="#system" class="nav-link">System</a>
-      <a href="#risk" class="nav-link">Risk</a>
-      <a href="#remember" class="nav-link">I will remember you</a>
+
+    <!-- CLEAR, DISTINCT NAVIGATION MENU BUTTONS -->
+    <nav class="nav-menu-group" aria-label="Main Navigation">
+      <a href="#system" class="nav-btn">
+        <span>System</span>
+      </a>
+      <a href="#risk" class="nav-btn">
+        <span>Risk</span>
+      </a>
+      <a href="#remember" class="nav-btn nav-btn-highlight">
+        <span>I Will Remember You</span>
+      </a>
     </nav>
   </header>
 
@@ -314,7 +398,7 @@
     <!-- LEFT COLUMN: ANIMATION & WHITE PAPER -->
     <main>
 
-      <!-- ANIMATED SYNTHETIC EXECUTION VIEWPORT (REPLACES STATIC IMAGE) -->
+      <!-- ANIMATED SYNTHETIC EXECUTION VIEWPORT -->
       <section class="panel">
         <div class="panel-header">
           <span class="panel-title">// REALTIME EXECUTION MATRIX</span>
