@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loom Engine // Risk Matrix</title>
+
+  <!-- Google Fonts & Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,400&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #050811;
+      --panel-bg: rgba(8, 14, 27, 0.85);
+      --panel-border: rgba(0, 240, 255, 0.25);
+      --accent-cyan: #00f0ff;
+      --accent-pink: #ff0080;
+      --accent-amber: #ffb000;
+      --text-dim: #64748b;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: #cbd5e1;
+      font-family: 'Share Tech Mono', monospace;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.05) 0%, transparent 70%),
+        linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 30px 30px, 30px 30px;
+    }
+
+    /* --- SITE NAVIGATION HEADER --- */
+    .site-nav-header {
+      max-width: 1280px;
+      margin: 20px auto 10px auto;
+      padding: 12px 20px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(5px);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-img-wrapper {
+      width: 48px;
+      height: 48px;
+      background: #000;
+      border: 1px solid var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    .logo-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 2px;
+    }
+
+    .nav-menu-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      color: var(--accent-cyan);
+      padding: 8px 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.1);
+    }
+
+    .nav-btn::before {
+      content: '>';
+      color: var(--accent-pink);
+      font-weight: bold;
+      opacity: 0.6;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: rgba(0, 240, 255, 0.18);
+      border-color: var(--accent-cyan);
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+
+    /* --- LAYOUT & TYPEWRITER CONTAINERS --- */
+    .risk-container {
+      max-width: 1280px;
+      margin: 10px auto 40px auto;
+      padding: 0 20px;
+    }
+
+    .terminal-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+      padding: 24px;
+      position: relative;
+    }
+
+    .typewriter-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #00f0ff;
+      text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
+      white-space: pre-wrap;
+    }
+
+    /* BLINKING TERMINAL CURSOR */
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background-color: var(--accent-cyan);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* --- IMAGE CONTAINER --- */
+    .image-frame {
+      position: relative;
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      background: #000;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: auto;
+      max-height: 650px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .scanline-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SITE NAVIGATION HEADER -->
+  <header class="site-nav-header">
+    <div class="logo-container">
+      <div class="logo-img-wrapper">
+        <img id="brand-logo-img" src="logo.jpeg" alt="Loom Engine Logo" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-synth text-cyan-400 text-xs text-center\'>LOGO</span>';" />
+      </div>
+      <div>
+        <div class="font-synth text-xl text-cyan-300 tracking-wider leading-none glow-cyan" style="font-family:'Orbitron', sans-serif;">LOOM // ENGINE</div>
+        <div class="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-0.5">SYSTEM_TERMINAL</div>
+      </div>
+    </div>
+
+    <!-- HUD MENU BUTTONS -->
+    <div class="flex items-center gap-3">
+      <span class="font-hud text-[10px] tracking-widest text-slate-400 uppercase border-r border-slate-700 pr-3 hidden sm:inline-block" style="font-family:'Orbitron', sans-serif;">
+        SITE NAVIGATION //
+      </span>
+
+      <nav class="nav-menu-group" aria-label="Main Navigation">
+        <a href="index.html" class="nav-btn">
+          <span>System</span>
+        </a>
+        <a href="risk.html" class="nav-btn active">
+          <span>Risk</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN RISK CONTENT AREA -->
+  <main class="risk-container space-y-6">
+
+    <!-- TOP SECTION: BRUTE-FORCED ERGODICITY TYPEWRITER BLOCK -->
+    <section class="terminal-card">
+      <div class="text-[11px] text-slate-500 uppercase tracking-widest mb-2 font-mono">// RISK_ENGINEERING_DISCIPLINE</div>
+      <div id="top-typewriter" class="typewriter-text"></div>
+    </section>
+
+    <!-- FULLSIZE RECTANGULAR PHOTO FRAME (TOP PORTION VISIBLE ABOVE THE FOLD) -->
+    <section class="image-frame my-6">
+      <!-- REPLACE 'risk-matrix.jpeg' WITH YOUR ACTUAL IMAGE FILENAME -->
+      <img src="risk-matrix.jpeg" alt="Loom Engine Risk Architecture" onerror="this.onerror=null; this.src='https://via.placeholder.com/1280x500/080e1b/00f0ff?text=LOOM+ENGINE+//+RISK+MATRIX+VISUAL';" />
+      <div class="scanline-overlay"></div>
+    </section>
+
+    <!-- LOWER SECTION: PROPRIETARY DISCLOSURE TYPEWRITER BLOCK (SCROLL TRIGGERED) -->
+    <section id="lower-trigger-zone" class="terminal-card">
+      <div class="text-[11px] text-amber-500 uppercase tracking-widest mb-2 font-mono">// ALLOCATION_STATUS_DISCLOSURE</div>
+      <div id="lower-typewriter" class="typewriter-text" style="color: #cbd5e1;"></div>
+    </section>
+
+  </main>
+
+  <!-- TYPEWRITER & INTERSECTION OBSERVER SCRIPT -->
+  <script>
+    // COPY STRINGS
+    const topText = `// TERMINAL RISK MATRIX: BRUTE-FORCED ERGODICITY\n\nStandard financial models assume ensemble average returns, ignoring path-dependency and catastrophic tail-risk. Loom Engine forces strict ergodicity onto volatile perp-futures order books. System capital operates under mandatory position-sizing decay curves, volatility-adjusted ATR stops, and hard circuit-breaker liquidation barriers. Tail-risk absorption is non-negotiable: zero ruin probability is hard-coded into every execution cycle.`;
+
+    const lowerText = `INFRASTRUCTURE // PROPRIETARY EXECUTION ONLY\n\nLoom Engine was engineered exclusively to deploy and manage internal capital across decentralized perpetual venues. Model-80 harness parameters operate under institutional risk ceilings and strict dynamic drawdowns.\n\nCapital allocation models are closed to public or third-party participation. All signal generation, liquidity routing, and vault execution remain 100% internal and non-custodial.`;
+
+    // TYPEWRITER HELPER FUNCTION
+    function typeWriter(elementId, text, speed = 18, onComplete = null) {
+      const container = document.getElementById(elementId);
+      let index = 0;
+      
+      // Create text container and persistent blinking cursor
+      const textNode = document.createElement('span');
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
+      container.appendChild(textNode);
+      container.appendChild(cursor);
+
+      function type() {
+        if (index < text.length) {
+          textNode.textContent += text.charAt(index);
+          index++;
+          setTimeout(type, speed);
+        } else if (onComplete) {
+          onComplete();
+        }
+      }
+      type();
+    }
+
+    // RUN TOP TYPEWRITER IMMEDIATELY ON PAGE LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      typeWriter('top-typewriter', topText, 16);
+
+      // SETUP SCROLL TRIGGER FOR LOWER TYPEWRITER
+      let lowerTriggered = false;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !lowerTriggered) {
+            lowerTriggered = true;
+            typeWriter('lower-typewriter', lowerText, 18);
+          }
+        });
+      }, { threshold: 0.25 });
+
+      observer.observe(document.getElementById('lower-trigger-zone'));
+    });
+  </script>
+
+</body>
+</html>
