@@ -3,120 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LOOM TRADING // SYSTEM_TERMINAL</title>
-  
-  <!-- Fonts: Monospace, Cyber & Retro Synth Fonts -->
+  <title>Loom Engine // System Terminal</title>
+
+  <!-- Google Fonts & Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700;800&family=Orbitron:wght@500;700;900&family=VT323&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,700;1,400&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
   <style>
-    /* --- COLOR PALETTE & SYSTEM VARIABLES --- */
     :root {
-      --bg-color: #030308;
-      --panel-bg: rgba(15, 20, 28, 0.85);
-      --panel-border: #1e2638;
+      --bg-dark: #050811;
+      --panel-bg: rgba(8, 14, 27, 0.85);
+      --panel-border: rgba(0, 240, 255, 0.25);
       --accent-cyan: #00f0ff;
-      --accent-green: #00ff88;
-      --accent-amber: #ffb000;
       --accent-pink: #ff0080;
-      --text-main: #c3cdde;
-      --text-muted: #5a667a;
-      --text-bright: #ffffff;
-      --font-mono: 'Fira Code', 'JetBrains Mono', monospace;
-      --font-sans: 'Inter', sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      --accent-amber: #ffb000;
+      --text-dim: #64748b;
     }
 
     body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.6;
+      background-color: var(--bg-dark);
+      color: #cbd5e1;
+      font-family: 'Share Tech Mono', monospace;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       background-image: 
-        linear-gradient(rgba(30, 38, 56, 0.2) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(30, 38, 56, 0.2) 1px, transparent 1px);
-      background-size: 30px 30px;
-      padding-top: 40px; /* Offset for fixed top HUD */
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.05) 0%, transparent 70%),
+        linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 30px 30px, 30px 30px;
     }
 
-    .font-synth { font-family: 'VT323', monospace; }
-    .font-hud { font-family: 'Orbitron', sans-serif; }
-
-    /* CRT scanline overlay */
-    .crt-overlay::before {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.35) 50%
-      ), linear-gradient(
-        90deg,
-        rgba(255, 0, 0, 0.02),
-        rgba(0, 255, 0, 0.01),
-        rgba(0, 0, 255, 0.02)
-      );
-      pointer-events: none;
-      background-size: 100% 4px, 6px 100%;
-      z-index: 999;
-    }
-
-    /* Glow Utility Classes */
-    .glow-cyan { text-shadow: 0 0 8px rgba(0, 240, 255, 0.8), 0 0 16px rgba(0, 240, 255, 0.4); }
-    .glow-magenta { text-shadow: 0 0 8px rgba(255, 0, 128, 0.8), 0 0 16px rgba(255, 0, 128, 0.4); }
-    .glow-yellow { text-shadow: 0 0 8px rgba(255, 221, 0, 0.8), 0 0 16px rgba(255, 221, 0, 0.4); }
-    .box-glow-neon { box-shadow: 0 0 25px rgba(0, 240, 255, 0.12), inset 0 0 15px rgba(255, 0, 128, 0.08); }
-
-    /* --- TOP HUD BAR --- */
-    .top-hud {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 35px;
-      background: #040508;
-      border-bottom: 1px solid var(--panel-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 1000;
-      font-size: 11px;
-    }
-
-    .hud-status {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .indicator-dot {
-      width: 7px;
-      height: 7px;
-      background-color: var(--accent-green);
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 8px var(--accent-green);
-    }
-
-    .cyan-text { color: var(--accent-cyan); }
-    .green-text { color: var(--accent-green); }
-    .amber-text { color: var(--accent-amber); }
-    .pink-text { color: var(--accent-pink); }
-    .muted-text { color: var(--text-muted); }
-
-    /* --- NAVIGATION BRANDING HEADER --- */
+    /* --- SITE NAVIGATION HEADER --- */
     .site-nav-header {
       max-width: 1280px;
       margin: 20px auto 10px auto;
@@ -129,7 +49,6 @@
       backdrop-filter: blur(5px);
     }
 
-    /* JPEG LOGO PLACEHOLDER WRAPPER */
     .logo-container {
       display: flex;
       align-items: center;
@@ -137,7 +56,7 @@
     }
 
     .logo-img-wrapper {
-      width: 80px;
+      width: 48px;
       height: 48px;
       background: #000;
       border: 1px solid var(--accent-cyan);
@@ -152,10 +71,10 @@
     .logo-img-wrapper img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      padding: 2px;
     }
 
-    /* PROMINENT MENU BUTTON STYLING */
     .nav-menu-group {
       display: flex;
       gap: 12px;
@@ -190,7 +109,7 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-    .nav-btn:hover {
+    .nav-btn:hover, .nav-btn.active {
       background: rgba(0, 240, 255, 0.18);
       border-color: var(--accent-cyan);
       color: #ffffff;
@@ -198,835 +117,165 @@
       transform: translateY(-1px);
     }
 
-    .nav-btn:hover::before {
+    .nav-btn:hover::before, .nav-btn.active::before {
       opacity: 1;
       transform: translateX(2px);
     }
 
-    .nav-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
-    }
-
-    /* Special Highlight for Syllabus / Remember Button */
-    .nav-btn-highlight {
-      background: rgba(255, 0, 128, 0.08);
-      border-color: rgba(255, 0, 128, 0.5);
-      color: #ff80c0;
-      box-shadow: 0 0 8px rgba(255, 0, 128, 0.15);
-    }
-
-    .nav-btn-highlight::before {
-      color: var(--accent-amber);
-    }
-
-    .nav-btn-highlight:hover {
-      background: rgba(255, 0, 128, 0.22);
-      border-color: var(--accent-pink);
-      color: #ffffff;
-      box-shadow: 0 0 18px rgba(255, 0, 128, 0.5);
-    }
-
-    /* --- LAYOUT GRID --- */
-    .container {
+    /* --- TERMINAL DASHBOARD PANELS --- */
+    .terminal-container {
       max-width: 1280px;
-      margin: 10px auto 20px auto;
+      margin: 10px auto 40px auto;
       padding: 0 20px;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 20px;
     }
 
-    @media (max-width: 900px) {
-      .container { grid-template-columns: 1fr; }
-      .site-nav-header { flex-direction: column; gap: 16px; align-items: flex-start; }
-      .nav-menu-group { width: 100%; flex-wrap: wrap; }
-      .nav-btn { flex: 1 1 auto; justify-content: center; }
-    }
-
-    /* --- PANELS & CARDS --- */
-    .panel {
+    .panel-box {
       background: var(--panel-bg);
       border: 1px solid var(--panel-border);
-      border-radius: 2px;
-      padding: 20px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(5px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
       position: relative;
-    }
-
-    .panel::before {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 0; height: 0;
-      border-style: solid;
-      border-width: 0 10px 10px 0;
-      border-color: transparent var(--accent-cyan) transparent transparent;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
     .panel-header {
-      border-bottom: 1px dashed var(--panel-border);
-      padding-bottom: 8px;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .panel-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--text-bright);
-    }
-
-    /* --- CONTENT STYLING --- */
-    h1, h2, h3 {
-      color: var(--text-bright);
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .prose {
-      font-family: var(--font-sans);
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text-main);
-    }
-
-    .prose p { margin-bottom: 15px; }
-
-    /* --- DATA TABLES --- */
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    .data-table td {
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(30, 38, 56, 0.5);
-    }
-
-    .data-table tr:last-child td { border-bottom: none; }
-
-    /* --- CODE / SPEC BLOCKS --- */
-    .code-block {
-      background: #040508;
-      border-left: 2px solid var(--accent-cyan);
-      padding: 12px;
-      font-size: 11px;
-      margin: 10px 0;
-      overflow-x: auto;
-    }
-
-    /* --- TAGS & CHIPS --- */
-    .tag {
-      display: inline-block;
-      background: rgba(0, 240, 255, 0.1);
-      border: 1px solid var(--accent-cyan);
-      color: var(--accent-cyan);
-      padding: 2px 6px;
-      font-size: 10px;
-      border-radius: 2px;
-      margin-right: 5px;
-      margin-bottom: 5px;
-    }
-
-    .tag-amber {
-      background: rgba(255, 176, 0, 0.1);
-      border-color: var(--accent-amber);
-      color: var(--accent-amber);
-    }
-
-    .library-item {
-      margin-bottom: 12px;
-      padding-bottom: 12px;
+      background: rgba(0, 240, 255, 0.05);
       border-bottom: 1px solid var(--panel-border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .library-item:last-child { border-bottom: none; }
+    .glow-cyan { text-shadow: 0 0 8px rgba(0, 240, 255, 0.6); }
+    .glow-pink { text-shadow: 0 0 8px rgba(255, 0, 128, 0.6); }
+    .glow-amber { text-shadow: 0 0 8px rgba(255, 176, 0, 0.6); }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #050811; }
+    ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
   </style>
 </head>
-<body class="crt-overlay select-none">
+<body>
 
-  <!-- FIXED TOP HUD BAR -->
-  <div class="top-hud">
-    <div class="hud-status">
-      <span><span class="indicator-dot"></span> <span class="green-text">SYSTEM: ONLINE</span></span>
-      <span class="muted-text">|</span>
-      <span>NODE: <span class="cyan-text">MX-CENTRAL</span></span>
-      <span class="muted-text">|</span>
-      <span>EXECUTION: <a href="https://app.hyperliquid.xyz" target="_blank" style="color: var(--text-main); text-decoration: none; font-weight: 500;" onmouseover="this.style.color='var(--accent-cyan)'" onmouseout="this.style.color='var(--text-main)'">HYPERLIQUID <span class="muted-text" style="font-size: 9px;">[↗]</span></a></span>
-    </div>
-    <div>
-      <span class="muted-text">LATENCY: 14ms // </span>
-      <span class="cyan-text">LOOM ENGINE v2.4</span>
-    </div>
-  </div>
-
-  <!-- SITE NAVIGATION HEADER WITH JPEG LOGO PLACEHOLDER & PROMINENT HUD BUTTONS -->
+  <!-- SITE NAVIGATION HEADER -->
   <header class="site-nav-header">
     <div class="logo-container">
       <div class="logo-img-wrapper">
-        <!-- REPLACE 'logo.jpg' WITH YOUR ACTUAL JPEG IMAGE FILENAME OR PATH -->
         <img id="brand-logo-img" src="LoomEngineLogo.jpeg" alt="Loom Engine Logo" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'font-synth text-cyan-400 text-xs text-center\'>LOGO</span>';" />
       </div>
       <div>
-        <div class="font-synth text-xl text-cyan-300 tracking-wider leading-none glow-cyan">LOOM // ENGINE</div>
+        <div class="font-synth text-xl text-cyan-300 tracking-wider leading-none glow-cyan" style="font-family:'Orbitron', sans-serif;">LOOM // ENGINE</div>
         <div class="text-[9px] font-mono text-slate-500 uppercase tracking-widest mt-0.5">SYSTEM_TERMINAL</div>
       </div>
     </div>
 
-    <!-- CLEAR, DISTINCT NAVIGATION MENU BUTTONS -->
-    <nav class="nav-menu-group" aria-label="Main Navigation">
-      <a href="#system" class="nav-btn">
-        <span>System</span>
-      </a>
-      <a href="#risk" class="nav-btn">
-        <span>Risk</span>
-      </a>
-      <a href="#remember" class="nav-btn nav-btn-highlight">
-        <span>I Will Remember You</span>
-      </a>
-    </nav>
+    <!-- HUD MENU BUTTONS (CONSOLIDATED 2-PAGE ARCHITECTURE) -->
+    <div class="flex items-center gap-3">
+      <span class="font-hud text-[10px] tracking-widest text-slate-400 uppercase border-r border-slate-700 pr-3 hidden sm:inline-block" style="font-family:'Orbitron', sans-serif;">
+        SITE NAVIGATION //
+      </span>
+
+      <nav class="nav-menu-group" aria-label="Main Navigation">
+        <a href="index.html" class="nav-btn active">
+          <span>System</span>
+        </a>
+        <a href="risk.html" class="nav-btn">
+          <span>Risk</span>
+        </a>
+      </nav>
+    </div>
   </header>
 
-  <div class="container" id="system">
+  <!-- MAIN TERMINAL DASHBOARD AREA -->
+  <main class="terminal-container">
+    <div class="panel-box">
+      <div class="panel-header">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-cyan-400 font-mono">// REALTIME EXECUTION MATRIX</span>
+        </div>
+        <span class="text-[10px] text-slate-500 font-mono tracking-widest">MODEL-80 HARNESS</span>
+      </div>
 
-    <!-- LEFT COLUMN: ANIMATION & WHITE PAPER -->
-    <main>
+      <div class="p-6 space-y-6">
+        <!-- TOP HUD STRIP -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- STRATEGY TITLE CARD -->
+          <div class="md:col-span-2 border border-cyan-500/30 bg-black/50 p-4 rounded flex items-center justify-between">
+            <div>
+              <div class="text-[10px] text-slate-400 tracking-widest uppercase">ACTIVE MODEL</div>
+              <div class="text-xl font-bold text-cyan-300 tracking-wider glow-cyan mt-1" style="font-family:'Orbitron', sans-serif;">ASYMMETRIC SHORT FADE</div>
+            </div>
+            <div class="border border-amber-500/40 bg-amber-500/10 px-3 py-1 rounded text-right">
+              <div class="text-[9px] text-amber-400 font-mono">MODEL-</div>
+              <div class="text-xs text-amber-300 font-bold font-mono">80</div>
+            </div>
+          </div>
 
-      <!-- ANIMATED SYNTHETIC EXECUTION VIEWPORT -->
-      <section class="panel">
-        <div class="panel-header">
-          <span class="panel-title">// REALTIME EXECUTION MATRIX</span>
-          <span class="muted-text">MODEL-80 HARNESS</span>
+          <!-- METRICS GRID -->
+          <div class="grid grid-cols-3 md:col-span-2 gap-2">
+            <div class="border border-cyan-500/20 bg-cyan-950/20 p-2 text-center rounded">
+              <div class="text-[9px] text-slate-400 font-mono">TICKER</div>
+              <div class="text-sm font-bold text-cyan-300 font-mono mt-1">ZRO</div>
+            </div>
+            <div class="border border-pink-500/20 bg-pink-950/20 p-2 text-center rounded">
+              <div class="text-[9px] text-slate-400 font-mono">PHASE</div>
+              <div class="text-xs font-bold text-pink-400 font-mono mt-1 uppercase glow-pink">VIOLENT FLUSH</div>
+            </div>
+            <div class="border border-amber-500/20 bg-amber-950/20 p-2 text-center rounded">
+              <div class="text-[9px] text-slate-400 font-mono">ALPHA</div>
+              <div class="text-sm font-bold text-amber-300 font-mono mt-1 glow-amber">+24.2%</div>
+            </div>
+          </div>
         </div>
 
-        <div class="w-full relative rounded-xl overflow-hidden bg-black/90 border border-cyan-500/40 shadow-2xl box-glow-neon flex flex-col items-center justify-center p-2 mb-4">
+        <!-- EXECUTION SEQUENCE TICKER STRIP -->
+        <div class="border border-slate-800 bg-black/60 p-3 rounded flex items-center justify-between overflow-x-auto gap-4">
+          <div class="flex items-center gap-2 text-xs font-mono shrink-0">
+            <span class="text-pink-400 font-bold">SEQUENCE:</span>
+            <span class="bg-pink-500/20 border border-pink-500/40 text-pink-300 px-2 py-0.5 rounded text-[11px]">ZRO</span>
+            <span class="text-slate-500">SAGA</span>
+            <span class="text-slate-500">NIL</span>
+            <span class="text-slate-500">W</span>
+            <span class="text-slate-500">ENA</span>
+            <span class="text-slate-500">TIA</span>
+            <span class="text-slate-500">STRK</span>
+            <span class="text-slate-500">MEME</span>
+          </div>
+          <div class="flex items-center gap-2 font-mono text-xs shrink-0">
+            <span class="text-amber-400">LOOP:</span>
+            <div class="w-28 h-2 bg-slate-800 rounded-full overflow-hidden border border-amber-500/30">
+              <div class="w-3/4 h-full bg-gradient-to-r from-pink-500 via-amber-400 to-cyan-400"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN TERMINAL TELEMETRY GRAPHIC -->
+        <div class="border border-cyan-500/30 bg-black rounded p-4 relative min-h-[380px] flex items-center justify-center overflow-hidden">
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.05)_0%,transparent_70%)] pointer-events-none"></div>
           
-          <!-- Live HUD Overlay Header -->
-          <div class="w-full p-3 rounded-lg bg-slate-950/90 border border-cyan-500/30 mb-2 flex flex-col lg:flex-row items-center justify-between gap-3">
-            <div class="flex items-center space-x-3 w-full lg:w-auto justify-between lg:justify-start">
-              <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 rounded-sm bg-pink-500 animate-ping shadow-[0_0_12px_#ff0080] flex-shrink-0"></div>
-                <div>
-                  <h1 class="text-lg font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-400 uppercase font-hud glow-cyan flex items-center gap-2">
-                    <span>ASYMMETRIC SHORT FADE</span>
-                    <span class="inline-block text-[10px] tracking-normal font-synth text-yellow-300 bg-yellow-950/80 border border-yellow-500/60 px-2 py-0.5 rounded">MODEL-80</span>
-                  </h1>
-                </div>
-              </div>
-            </div>
+          <!-- SCANLINES EFFECT -->
+          <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px;"></div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto text-center">
-              <div class="bg-black/80 border border-cyan-500/40 p-1.5 rounded min-w-[90px]">
-                <span class="text-[9px] font-hud uppercase text-slate-400 block">TICKER</span>
-                <span id="current-asset" class="text-lg font-synth font-bold text-cyan-300 glow-cyan">ZRO</span>
-              </div>
-              <div class="bg-black/80 border border-pink-500/40 p-1.5 rounded min-w-[90px]">
-                <span class="text-[9px] font-hud uppercase text-slate-400 block">PHASE</span>
-                <span id="cycle-phase" class="text-xs font-hud font-bold text-pink-400 glow-magenta uppercase">COMPRESSION</span>
-              </div>
-              <div class="bg-black/80 border border-yellow-500/40 p-1.5 rounded min-w-[90px]">
-                <span class="text-[9px] font-hud uppercase text-slate-400 block">ALPHA</span>
-                <span id="expected-return" class="text-lg font-synth font-bold text-yellow-300 glow-yellow">+24.2%</span>
-              </div>
-              <div class="bg-black/80 border border-rose-500/40 p-1.5 rounded min-w-[90px]">
-                <span class="text-[9px] font-hud uppercase text-slate-400 block">MAX RISK</span>
-                <span id="risk-boundary" class="text-lg font-synth font-bold text-rose-400 glow-magenta">1.25R</span>
-              </div>
+          <!-- DIAGRAM TELEMETRY OVERLAY -->
+          <div class="relative z-10 w-full text-center space-y-3">
+            <div class="inline-block border border-cyan-400/40 bg-cyan-950/40 px-3 py-1 rounded text-cyan-300 text-xs font-mono">
+              [SYSTEM_STATE: HYPERLIQUID_L1_ACTIVE]
             </div>
+            <div class="text-3xl font-bold text-cyan-400 tracking-widest font-mono glow-cyan">
+              LIQUIDITY SWEEP APEX
+            </div>
+            <p class="text-xs text-slate-400 max-w-lg mx-auto font-mono">
+              Order flow imbalance detected across perpetual futures venues. Dynamic leverage scaling operating within non-ruin risk parameters.
+            </p>
           </div>
-
-          <!-- Interactive Animation Canvas Container -->
-          <div class="w-full relative rounded-lg overflow-hidden bg-black border border-pink-500/30">
-            
-            <!-- Sequence HUD Pills -->
-            <div class="absolute top-3 left-3 z-20 flex items-center space-x-2 bg-black/90 border border-cyan-500/50 backdrop-blur-md px-2.5 py-1 rounded">
-              <span class="text-[10px] font-hud text-pink-400 uppercase tracking-widest">SEQUENCE:</span>
-              <div id="asset-list-pills" class="flex items-center space-x-1"></div>
-            </div>
-
-            <!-- Loop Progress Bar HUD -->
-            <div class="absolute top-3 right-3 z-20 flex items-center space-x-2 bg-black/90 border border-yellow-500/50 backdrop-blur-md px-2.5 py-1 rounded">
-              <span class="text-[10px] font-hud text-yellow-400 uppercase tracking-widest">LOOP:</span>
-              <div class="w-20 h-2 bg-slate-900 border border-yellow-500/40 rounded-sm overflow-hidden">
-                <div id="progress-bar-inner" class="h-full bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-400 w-0 transition-all duration-100"></div>
-              </div>
-            </div>
-
-            <!-- Main Canvas -->
-            <canvas id="trading-canvas" class="w-full h-[400px] sm:h-[480px] block"></canvas>
-          </div>
-
-          <!-- Viewport Footer Info -->
-          <div class="w-full mt-2 p-2 rounded bg-black/80 border border-cyan-500/30 flex items-center justify-between text-[10px] font-mono text-slate-400">
-            <div class="flex items-center space-x-2">
-              <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              <span class="font-synth text-cyan-300 tracking-widest">SYNTHETIC FEED: ACTIVE</span>
-            </div>
-            <div>AUTONOMOUS ERGODIC EXECUTION ENGINE</div>
-            <div class="font-synth text-yellow-400">
-              FPS: <span id="fps-display">60</span>
-            </div>
-          </div>
-
         </div>
 
-        <div class="code-block">
-          <code>&gt; SYSTEM_STATUS: Executing liquidity capture across high-volatility pairs. Rules-based parameters active. Zero manual discretion.</code>
-        </div>
-      </section>
+      </div>
+    </div>
+  </main>
 
-      <!-- WHITE PAPER / SYSTEM METHODOLOGY -->
-      <section class="panel">
-        <div class="panel-header">
-          <span class="panel-title">// SPECIFICATION: EXECUTION CORE</span>
-          <span class="muted-text">WHITE_PAPER_V2</span>
-        </div>
-
-        <div class="prose">
-          <h3>1.0 System Philosophy & Microstructure</h3>
-          <p>
-            This system operates on the principle of dynamic structural overextension. Rather than predicting long-term price action, the architecture isolates extreme liquidity imbalances on ultra-low timeframes (1M/15M) aligned with macro equilibrium zones (4H/1D).
-          </p>
-
-          <h3>2.0 Multi-Timeframe Confluence Framework</h3>
-          <p>
-            Trade execution occurs exclusively when three distinct structural layers align:
-          </p>
-          <ul>
-            <li style="margin-left: 20px; margin-bottom: 5px;">
-              <strong class="cyan-text">Macro Alignment (Daily/4H):</strong> Identifies equilibrium boundaries via Cloud structures and volume profile nodes.
-            </li>
-            <li style="margin-left: 20px; margin-bottom: 5px;">
-              <strong class="cyan-text">Intermediate Momentum (1H):</strong> Verifies trend exhaustion and momentum divergence via RSI matrix.
-            </li>
-            <li style="margin-left: 20px; margin-bottom: 15px;">
-              <strong class="cyan-text">Tactical Execution (1M/15M):</strong> Captures immediate order book spikes and volatility fades.
-            </li>
-          </ul>
-
-          <h3 id="risk">3.0 Risk Mitigation Protocol</h3>
-          <p>
-            Capital preservation overrides signal frequency. Position sizing is calculated dynamically using predefined mathematical drawdown limits. All invalidation criteria are defined prior to order entry.
-          </p>
-        </div>
-      </section>
-
-      <!-- KNOWLEDGE VAULT / READING LIST -->
-      <section class="panel" id="remember">
-        <div class="panel-header">
-          <span class="panel-title">// KNOWLEDGE VAULT: RESEARCH & SYLLABUS</span>
-          <span class="muted-text">INDEX_NEXUS</span>
-        </div>
-
-        <!-- CMT CURRICULUM -->
-        <div class="library-item">
-          <span class="tag tag-amber">ACCREDITATION</span>
-          <strong class="text-bright">CMT Curriculum: Levels I, II, & III</strong> 
-          <span class="muted-text">— Chartered Market Technician Association</span>
-          <p class="muted-text" style="font-size: 11px; margin-top: 4px;">
-            Core Focus: Theory, market indicators, portfolio management, multi-timeframe chart analysis, and behavioral finance.
-          </p>
-        </div>
-
-        <!-- HARRIS -->
-        <div class="library-item">
-          <span class="tag">MICROSTRUCTURE</span>
-          <strong class="text-bright">Trading and Exchanges: Market Microstructure for Practitioners</strong> 
-          <span class="muted-text">— Larry Harris</span>
-          <p class="muted-text" style="font-size: 11px; margin-top: 4px;">
-            Core Focus: Order types, liquidity provision, market makers, and how order flow mechanics drive price movement.
-          </p>
-        </div>
-
-        <!-- WEIS -->
-        <div class="library-item">
-          <span class="tag">VOLUME & TAPE</span>
-          <strong class="text-bright">Trades About to Happen: A Modern Adaptation of the Wyckoff Method</strong> 
-          <span class="muted-text">— David H. Weis</span>
-          <p class="muted-text" style="font-size: 11px; margin-top: 4px;">
-            Core Focus: Reading volume behavior, market absorption, spring/upthrust setups, and Wyckoff tape analysis.
-          </p>
-        </div>
-
-        <!-- BOUCHAUD -->
-        <div class="library-item">
-          <span class="tag">QUANT DYNAMICS</span>
-          <strong class="text-bright">Trades, Quotes and Prices: Financial Markets Operations and Microstructure</strong> 
-          <span class="muted-text">— Jean-Philippe Bouchaud et al.</span>
-          <p class="muted-text" style="font-size: 11px; margin-top: 4px;">
-            Core Focus: Empirical market dynamics, order book impact, statistical fluctuations, and liquidity fragmentation.
-          </p>
-        </div>
-
-        <!-- HFT WHITE PAPERS -->
-        <div class="library-item">
-          <span class="tag tag-amber">RESEARCH PAPER</span>
-          <strong class="text-bright">High-Frequency Trading & Market Microstructure Mechanics</strong> 
-          <span class="muted-text">— Institutional White Paper Series</span>
-          <p class="muted-text" style="font-size: 11px; margin-top: 4px;">
-            Core Focus: Order book queue dynamics, latency arbitrage, and toxic flow detection (VPIN metrics).
-          </p>
-        </div>
-
-        <!-- MACHINE LEARNING WHITE PAPERS -->
-        <div class="library-item">
-          <span class="tag tag-amber">RESEARCH PAPER</span>
-          <strong class="text-bright">Machine Learning in Quantitative Asset Management & Signal Detection</strong> 
-          <span class="muted-text">— Applied AI Quantitative Research</span>
-          <p class="muted-text" style="font-size: 11px; margin-top: 4px;">
-            Core Focus: Overfitting prevention in backtesting, regime classification models, and non-linear feature extraction.
-          </p>
-        </div>
-
-      </section>
-
-    </main>
-
-    <!-- RIGHT COLUMN: OPERATOR DOSSIER & SIDEBAR METRICS -->
-    <aside>
-
-      <!-- OPERATOR DOSSIER -->
-      <section class="panel">
-        <div class="panel-header">
-          <span class="panel-title">// OPERATOR DOSSIER</span>
-          <span class="amber-text">REDACTED</span>
-        </div>
-
-        <table class="data-table">
-          <tr>
-            <td class="muted-text">DESIGNATION:</td>
-            <td class="cyan-text">OPERATOR_01</td>
-          </tr>
-          <tr>
-            <td class="muted-text">LOCATION:</td>
-            <td>[ REDACTED / DECENTRALIZED ]</td>
-          </tr>
-          <tr>
-            <td class="muted-text">SPECIALIZATION:</td>
-            <td>Perpetual Futures / Volatility Fades</td>
-          </tr>
-          <tr>
-            <td class="muted-text">ACCREDITATION:</td>
-            <td>CMT Formal Technical Foundations</td>
-          </tr>
-          <tr>
-            <td class="muted-text">EXECUTION:</td>
-            <td><span class="green-text">100% Rules-Based</span></td>
-          </tr>
-        </table>
-      </section>
-
-      <!-- SYSTEM MATRIX WIDGET -->
-      <section class="panel">
-        <div class="panel-header">
-          <span class="panel-title">// RISK & SYSTEM PARAMETERS</span>
-        </div>
-
-        <div class="code-block" style="color: var(--accent-green);">
-{
-  "Risk_Per_Trade": "STRICT_MAX",
-  "Primary_Indicators": [
-    "Ichimoku_Cloud",
-    "RSI_Divergence",
-    "Volume_Profile"
-  ],
-  "Timeframe_Matrix": ["1D", "4H", "1H", "1M"],
-  "Bias": "Systematic_Neutral"
-}
-        </div>
-      </section>
-
-    </aside>
-
-  </div>
-
-  <!-- CANVAS ANIMATION ENGINE SCRIPT -->
-  <script>
-    const ASSETS = [
-      { symbol: 'ZRO', basePrice: 4.85, expectedReturn: '+24.2%', risk: '1.25R' },
-      { symbol: 'SAGA', basePrice: 2.15, expectedReturn: '+19.8%', risk: '1.18R' },
-      { symbol: 'NIL', basePrice: 1.42, expectedReturn: '+31.0%', risk: '1.50R' },
-      { symbol: 'W', basePrice: 0.38, expectedReturn: '+16.5%', risk: '1.12R' },
-      { symbol: 'ENA', basePrice: 0.76, expectedReturn: '+22.4%', risk: '1.30R' },
-      { symbol: 'TIA', basePrice: 6.40, expectedReturn: '+18.1%', risk: '1.20R' },
-      { symbol: 'STRK', basePrice: 0.52, expectedReturn: '+27.6%', risk: '1.40R' },
-      { symbol: 'MEME', basePrice: 0.014, expectedReturn: '+42.5%', risk: '1.85R' }
-    ];
-
-    let currentAssetIndex = 0;
-    const canvas = document.getElementById('trading-canvas');
-    const ctx = canvas.getContext('2d');
-
-    const elAsset = document.getElementById('current-asset');
-    const elPhase = document.getElementById('cycle-phase');
-    const elReturn = document.getElementById('expected-return');
-    const elRisk = document.getElementById('risk-boundary');
-    const elPills = document.getElementById('asset-list-pills');
-    const elProgressBar = document.getElementById('progress-bar-inner');
-    const elFps = document.getElementById('fps-display');
-
-    function resizeCanvas() {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    }
-    window.addEventListener('resize', resizeCanvas);
-
-    function renderPills() {
-      elPills.innerHTML = '';
-      ASSETS.forEach((ast, idx) => {
-        const pill = document.createElement('span');
-        pill.className = `text-[9px] font-hud px-1.5 py-0.5 rounded transition-all duration-300 ${
-          idx === currentAssetIndex 
-            ? 'bg-pink-500/20 text-pink-300 border border-pink-500 glow-magenta font-bold' 
-            : 'text-slate-600 border border-transparent'
-        }`;
-        pill.innerText = ast.symbol;
-        elPills.appendChild(pill);
-      });
-    }
-
-    let progress = 0;
-    const CYCLE_SPEED = 0.0016;
-
-    let candles = [];
-    let tenkanLine = [];
-    let kijunLine = [];
-    let senkouA = [];
-    let senkouB = [];
-    let trailingStop = [];
-
-    function getPhase(p) {
-      if (p < 0.22) return { name: 'COMPRESSION', color: 'text-yellow-400 glow-yellow' };
-      if (p < 0.48) return { name: 'PARABOLIC RALLY', color: 'text-cyan-400 glow-cyan' };
-      if (p < 0.58) return { name: 'SWEEP REJECTION', color: 'text-pink-400 glow-magenta' };
-      if (p < 0.65) return { name: 'SHORT ENTRY', color: 'text-yellow-300 glow-yellow' };
-      if (p < 0.88) return { name: 'VIOLENT FLUSH', color: 'text-rose-500 glow-magenta' };
-      return { name: 'ASYMMETRIC LOCK', color: 'text-emerald-400 glow-cyan' };
-    }
-
-    function buildCycleData() {
-      const asset = ASSETS[currentAssetIndex];
-      const count = 80;
-      candles = [];
-      tenkanLine = [];
-      kijunLine = [];
-      senkouA = [];
-      senkouB = [];
-      trailingStop = [];
-
-      let currentPrice = asset.basePrice;
-
-      for (let i = 0; i < count; i++) {
-        let pct = i / count;
-        let open = currentPrice;
-        let high, low, close;
-
-        if (pct < 0.22) {
-          let change = (Math.random() - 0.48) * (asset.basePrice * 0.006);
-          close = open + change;
-          high = Math.max(open, close) + Math.random() * (asset.basePrice * 0.003);
-          low = Math.min(open, close) - Math.random() * (asset.basePrice * 0.003);
-        } 
-        else if (pct < 0.48) {
-          let isRedPullback = Math.random() < 0.28;
-          if (isRedPullback) {
-            let pullback = (asset.basePrice * 0.008) + Math.random() * (asset.basePrice * 0.006);
-            close = open - pullback;
-            high = open + Math.random() * (asset.basePrice * 0.004);
-            low = close - Math.random() * (asset.basePrice * 0.004);
-          } else {
-            let move = (asset.basePrice * 0.025) * Math.pow((pct - 0.22) * 4 + 1, 1.6);
-            close = open + move + (Math.random() * asset.basePrice * 0.005);
-            high = close + Math.random() * (asset.basePrice * 0.008);
-            low = open - Math.random() * (asset.basePrice * 0.003);
-          }
-        } 
-        else if (pct < 0.58) {
-          let spike = (asset.basePrice * 0.045);
-          high = open + spike;
-          close = open - (asset.basePrice * 0.015);
-          low = close - Math.random() * (asset.basePrice * 0.006);
-        } 
-        else if (pct < 0.88) {
-          let isGreenBounce = Math.random() < 0.26;
-          if (isGreenBounce) {
-            let bounce = (asset.basePrice * 0.009) + Math.random() * (asset.basePrice * 0.007);
-            close = open + bounce;
-            high = close + Math.random() * (asset.basePrice * 0.005);
-            low = open - Math.random() * (asset.basePrice * 0.003);
-          } else {
-            let move = (asset.basePrice * 0.032) * Math.pow((pct - 0.58) * 3 + 1, 1.4);
-            close = open - move - (Math.random() * asset.basePrice * 0.006);
-            low = close - Math.random() * (asset.basePrice * 0.01);
-            high = open + Math.random() * (asset.basePrice * 0.004);
-          }
-        } 
-        else {
-          let change = (Math.random() - 0.48) * (asset.basePrice * 0.005);
-          close = open + change;
-          high = Math.max(open, close) + Math.random() * (asset.basePrice * 0.003);
-          low = Math.min(open, close) - Math.random() * (asset.basePrice * 0.003);
-        }
-
-        currentPrice = close;
-        candles.push({ open, high, low, close });
-      }
-
-      for (let i = 0; i < count; i++) {
-        let tSlice = candles.slice(Math.max(0, i - 8), i + 1);
-        let tHigh = Math.max(...tSlice.map(c => c.high));
-        let tLow = Math.min(...tSlice.map(c => c.low));
-        tenkanLine.push((tHigh + tLow) / 2);
-
-        let kSlice = candles.slice(Math.max(0, i - 25), i + 1);
-        let kHigh = Math.max(...kSlice.map(c => c.high));
-        let kLow = Math.min(...kSlice.map(c => c.low));
-        kijunLine.push((kHigh + kLow) / 2);
-
-        senkouA.push((tenkanLine[i] + kijunLine[i]) / 2);
-        senkouB.push((kHigh + kLow) / 2 * 0.982);
-
-        if (i / count > 0.60) {
-          let stopVal = candles[i].high + (asset.basePrice * 0.018) - ((i / count - 0.60) * asset.basePrice * 0.045);
-          trailingStop.push(stopVal);
-        } else {
-          trailingStop.push(null);
-        }
-      }
-    }
-
-    function drawPixelCandle(x, yHigh, yLow, yOpen, yClose, candleWidth, isBullish) {
-      const PIXEL = 2;
-      const snap = (v) => Math.round(v / PIXEL) * PIXEL;
-
-      const px = snap(x);
-      const pyHigh = snap(yHigh);
-      const pyLow = snap(yLow);
-      const pyOpen = snap(yOpen);
-      const pyClose = snap(yClose);
-
-      const color = isBullish ? '#00ffcc' : '#ff0055';
-      const darkColor = isBullish ? '#003322' : '#330011';
-
-      ctx.fillStyle = color;
-      ctx.fillRect(px - PIXEL / 2, pyHigh, PIXEL, Math.max(pyLow - pyHigh, PIXEL));
-
-      const bodyTop = Math.min(pyOpen, pyClose);
-      const bodyBottom = Math.max(pyOpen, pyClose);
-      const bodyHeight = Math.max(bodyBottom - bodyTop, PIXEL * 2);
-      const halfW = snap(candleWidth * 0.38);
-
-      ctx.fillStyle = color;
-      ctx.fillRect(px - halfW, bodyTop, halfW * 2, bodyHeight);
-
-      if (bodyHeight >= PIXEL * 4 && halfW >= PIXEL * 2) {
-        ctx.fillStyle = darkColor;
-        ctx.fillRect(
-          px - halfW + PIXEL, 
-          bodyTop + PIXEL, 
-          (halfW - PIXEL) * 2, 
-          bodyHeight - PIXEL * 2
-        );
-
-        ctx.fillStyle = color;
-        for (let py = bodyTop + PIXEL * 2; py < bodyTop + bodyHeight - PIXEL * 2; py += PIXEL * 2) {
-          ctx.fillRect(px - PIXEL, py, PIXEL * 2, PIXEL);
-        }
-      }
-    }
-
-    function draw() {
-      const w = canvas.getBoundingClientRect().width;
-      const h = canvas.getBoundingClientRect().height;
-
-      ctx.clearRect(0, 0, w, h);
-
-      ctx.strokeStyle = 'rgba(0, 255, 204, 0.07)';
-      ctx.lineWidth = 1;
-      const gridCols = 12;
-      const gridRows = 8;
-      
-      for (let i = 0; i <= gridCols; i++) {
-        let x = (w / gridCols) * i;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, h);
-        ctx.stroke();
-      }
-      for (let i = 0; i <= gridRows; i++) {
-        let y = (h / gridRows) * i;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      }
-
-      const visibleCount = Math.floor(progress * candles.length);
-      if (visibleCount < 2) return;
-
-      const visibleCandles = candles.slice(0, visibleCount);
-
-      let minP = Math.min(...visibleCandles.map(c => c.low));
-      let maxP = Math.max(...visibleCandles.map(c => c.high));
-      let padding = (maxP - minP) * 0.16 || 1;
-      minP -= padding;
-      maxP += padding;
-
-      const getY = (val) => h - ((val - minP) / (maxP - minP)) * (h - 90) - 45;
-      const candleWidth = (w - 120) / candles.length;
-      const getX = (idx) => 60 + idx * candleWidth + candleWidth / 2;
-
-      if (visibleCount > 4) {
-        ctx.beginPath();
-        ctx.moveTo(getX(0), getY(senkouA[0]));
-        for (let i = 1; i < visibleCount; i++) {
-          ctx.lineTo(getX(i), getY(senkouA[i]));
-        }
-        for (let i = visibleCount - 1; i >= 0; i--) {
-          ctx.lineTo(getX(i), getY(senkouB[i]));
-        }
-        ctx.closePath();
-        
-        let cloudGlow = ctx.createLinearGradient(0, 0, 0, h);
-        cloudGlow.addColorStop(0, 'rgba(0, 255, 204, 0.12)');
-        cloudGlow.addColorStop(1, 'rgba(255, 0, 128, 0.05)');
-        ctx.fillStyle = cloudGlow;
-        ctx.fill();
-      }
-
-      ctx.lineWidth = 2;
-      ctx.shadowBlur = 8;
-
-      ctx.strokeStyle = '#00ffcc';
-      ctx.shadowColor = '#00ffcc';
-      ctx.beginPath();
-      for (let i = 0; i < visibleCount; i++) {
-        let x = getX(i), y = getY(tenkanLine[i]);
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-
-      ctx.strokeStyle = '#ff0080';
-      ctx.shadowColor = '#ff0080';
-      ctx.beginPath();
-      for (let i = 0; i < visibleCount; i++) {
-        let x = getX(i), y = getY(kijunLine[i]);
-        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      for (let i = 0; i < visibleCount; i++) {
-        const c = candles[i];
-        const x = getX(i);
-        const yOpen = getY(c.open);
-        const yClose = getY(c.close);
-        const yHigh = getY(c.high);
-        const yLow = getY(c.low);
-        const isBullish = c.close >= c.open;
-
-        drawPixelCandle(x, yHigh, yLow, yOpen, yClose, candleWidth, isBullish);
-      }
-
-      ctx.strokeStyle = '#ffdd00';
-      ctx.lineWidth = 2;
-      ctx.setLineDash([5, 4]);
-      ctx.beginPath();
-      let started = false;
-      for (let i = 0; i < visibleCount; i++) {
-        if (trailingStop[i] !== null) {
-          let x = getX(i), y = getY(trailingStop[i]);
-          if (!started) { ctx.moveTo(x, y); started = true; } 
-          else ctx.lineTo(x, y);
-        }
-      }
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      const triggerIdx = Math.floor(candles.length * 0.62);
-      if (visibleCount > triggerIdx) {
-        const tx = getX(triggerIdx);
-        const ty = getY(candles[triggerIdx].high);
-
-        ctx.fillStyle = '#ff0055';
-        ctx.beginPath();
-        ctx.moveTo(tx, ty - 12);
-        ctx.lineTo(tx - 8, ty - 26);
-        ctx.lineTo(tx + 8, ty - 26);
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.font = '700 12px Orbitron';
-        ctx.fillStyle = '#ff0055';
-        ctx.fillText('SHORT EXECUTE', tx - 55, ty - 32);
-      }
-
-      const apexIdx = Math.floor(candles.length * 0.52);
-      if (visibleCount > apexIdx) {
-        const ax = getX(apexIdx);
-        const ay = getY(candles[apexIdx].high);
-
-        ctx.strokeStyle = '#ff0080';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(ax, ay, 9, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.font = '700 11px VT323';
-        ctx.fillStyle = '#ff0080';
-        ctx.fillText('LIQUIDITY SWEEP APEX', ax + 14, ay - 4);
-      }
-    }
-
-    let lastTime = performance.now();
-    let frameCount = 0;
-
-    function tick(now) {
-      frameCount++;
-      if (now - lastTime >= 1000) {
-        elFps.innerText = frameCount;
-        frameCount = 0;
-        lastTime = now;
-      }
-
-      progress += CYCLE_SPEED;
-      elProgressBar.style.width = `${Math.min(progress * 100, 100)}%`;
-
-      if (progress >= 1.0) {
-        progress = 0;
-        currentAssetIndex = (currentAssetIndex + 1) % ASSETS.length;
-        const currentAsset = ASSETS[currentAssetIndex];
-
-        elAsset.innerText = currentAsset.symbol;
-        elReturn.innerText = currentAsset.expectedReturn;
-        elRisk.innerText = currentAsset.risk;
-        renderPills();
-
-        buildCycleData();
-      }
-
-      const currentPhase = getPhase(progress);
-      elPhase.innerText = currentPhase.name;
-      elPhase.className = `text-xs font-hud font-bold uppercase ${currentPhase.color}`;
-
-      draw();
-      requestAnimationFrame(tick);
-    }
-
-    window.onload = function() {
-      resizeCanvas();
-      renderPills();
-      buildCycleData();
-      requestAnimationFrame(tick);
-    };
-  </script>
 </body>
 </html>
